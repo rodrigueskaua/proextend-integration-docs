@@ -1,52 +1,54 @@
-# ProExtend - Documentação de Integração
+# ProExtend Integration API - Documentação
 
-Este repositório contém a documentação oficial para integração com a API ProExtend.
+[![Documentação](https://img.shields.io/badge/docs-online-blue.svg)](https://rodrigueskaua.github.io/proextend-integration-docs/)
+[![Última Atualização](https://img.shields.io/github/last-commit/rodrigueskaua/proextend-integration-docs?label=atualizado)](https://github.com/rodrigueskaua/proextend-integration-docs/commits/main)
 
-## 📚 Documentação Online
+Documentação oficial para integração de sistemas acadêmicos (ERPs) com a plataforma ProExtend.
 
-Acesse a documentação completa em: **https://rodrigueskaua.github.io/proextend-integration-docs/**
+## 📚 Sobre
 
-## 📖 Conteúdo
+Esta documentação foi desenvolvida para auxiliar equipes técnicas de instituições de ensino a integrar seus sistemas acadêmicos com a plataforma ProExtend.
 
-- [Visão Geral](docs/00-visao-geral.md) - Introdução à API de Integração
-- [Conceitos Fundamentais](docs/01-conceitos-fundamentais.md) - Entenda os conceitos básicos
-- [Autenticação](docs/02-autenticacao.md) - Como autenticar suas requisições
-- [Fluxo de Sincronização](docs/03-fluxo-de-sincronizacao.md) - Processo completo de sincronização
-- [Identificadores e Codes](docs/04-identificadores-e-codes.md) - Sistema de identificação
+O foco está em explicar **processos, conceitos e fluxos completos de sincronização**, não apenas endpoints isolados.
 
-## 🚀 Como usar
+## Acesso à Documentação
 
-A documentação está disponível online através do GitHub Pages. Você também pode navegar pelos arquivos markdown diretamente neste repositório.
+**[Acesse a documentação completa aqui](https://rodrigueskaua.github.io/proextend-integration-docs/)**
 
-## 🔄 Atualizações
+## Conteúdo
 
-Esta documentação é mantida e atualizada regularmente pela equipe ProExtend.
+A documentação cobre:
 
-## 🛠️ Desenvolvimento Local
+- **Visão Geral**: Introdução à API de integração e conceitos principais
+- **Conceitos Fundamentais**: Entidades e seus relacionamentos
+- **Autenticação**: Como gerar e usar API Keys
+- **Fluxo de Sincronização**: Passo a passo completo de integração
+- **Identificadores e Codes**: Como funcionam os identificadores do sistema
 
-Para visualizar a documentação localmente:
+## Desenvolvimento Local
+
+Esta documentação usa [Docusaurus](https://docusaurus.io/).
+
+### Instalação
 
 ```bash
-# Instalar Jekyll (primeira vez apenas)
-gem install bundler jekyll
-
-# Criar Gemfile
-cat > Gemfile << 'GEMFILE'
-source "https://rubygems.org"
-gem "github-pages", group: :jekyll_plugins
-gem "webrick"
-GEMFILE
-
-# Instalar dependências
-bundle install
-
-# Executar servidor local
-cd docs
-bundle exec jekyll serve
-
-# Acesse em http://localhost:4000
+npm install
 ```
 
-## 📄 Licença
+### Desenvolvimento
 
-Copyright © 2026 ProExtend. Todos os direitos reservados.
+```bash
+npm start
+```
+
+Acesse: http://localhost:3000
+
+### Build
+
+```bash
+npm run build
+```
+
+### Deploy
+
+O deploy é automático via GitHub Actions quando há push na branch `main`.
