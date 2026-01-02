@@ -1,0 +1,25 @@
+title: ProExtend - Documentação de Integração
+description: Guia completo para integração com a API ProExtend
+theme: jekyll-theme-cayman
+
+# Navegação
+header_pages:
+  - 00-visao-geral.md
+  - 01-conceitos-fundamentais.md
+  - 02-autenticacao.md
+  - 03-fluxo-de-sincronizacao.md
+  - 04-identificadores-e-codes.md
+
+# Configurações
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Plugins
+plugins:
+  - jekyll-relative-links
+
+relative_links:
+  enabled: true
+  collections: false
