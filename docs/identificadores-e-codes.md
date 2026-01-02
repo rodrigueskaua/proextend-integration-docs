@@ -7,18 +7,22 @@ title: Identificadores e Codes
 
 ## Introdução
 
-Este documento explica como funcionam os identificadores (`codes`) na integração ProExtend e por que deve-se usá-los.
+Este documento especifica o sistema de identificação de entidades na API de Integração ProExtend, detalhando o uso de codes (identificadores próprios do sistema origem), comportamento idempotente, convenções e casos de uso práticos.
 
 ## Conceito Principal
 
-**O sistema utiliza códigos próprios**. A plataforma ProExtend não gera identificadores pela API.
+**A API utiliza identificadores do sistema origem (codes)**. A plataforma ProExtend não gera novos identificadores através da API de integração.
+
+### Fluxo de Identificação
 
 ```
-Sistema ERP           ProExtend API
-code: "ALG001"       →      usa "ALG001" como identificador
-code: "PROF001"      →      usa "PROF001" como identificador
-code: "ALU2024001"   →      usa "ALU2024001" como identificador
+Sistema Origem (ERP)      →      Plataforma ProExtend
+code: "ALG001"            →      identificador: "ALG001"
+code: "PROF001"           →      identificador: "PROF001"
+code: "ALU2024001"        →      identificador: "ALU2024001"
 ```
+
+Esta abordagem elimina a necessidade de mapeamento entre sistemas e simplifica a integração.
 
 ## O que é um Code
 
@@ -104,68 +108,70 @@ Para vincular entidades, use os codes:
 
 A plataforma usa os codes para encontrar e vincular as entidades corretas.
 
-## Vantagens desta Abordagem
+## Vantagens da Abordagem
 
-### 1. Simplicidade
+### 1. Simplicidade de Integração
 
-Não é necessário armazenar IDs da plataforma. Utilize códigos próprios.
+Não é necessário armazenar ou mapear IDs internos da plataforma. Os códigos do sistema origem são suficientes para todas as operações.
 
-### 2. Idempotência
+### 2. Operações Idempotentes
 
-Pode sincronizar múltiplas vezes sem duplicar:
+Sincronizações múltiplas com o mesmo code não resultam em duplicação:
 
 ```
-1ª sincronização: code "PROF001" → cria professor
-2ª sincronização: code "PROF001" → atualiza professor (não duplica)
-3ª sincronização: code "PROF001" → atualiza professor (não duplica)
+1ª sincronização: code "PROF001" → Cria professor
+2ª sincronização: code "PROF001" → Atualiza dados do professor existente
+3ª sincronização: code "PROF001" → Atualiza dados do professor existente
 ```
 
-### 3. Manutenibilidade
+Este comportamento permite retry seguro de sincronizações sem risco de duplicação.
 
-Os códigos são familiares para a equipe:
-- "ALG001" é reconhecível
-- "PROF-2023-001" tem significado
-- "CAMPUS_CENTRO" é autoexplicativo
+### 3. Manutenibilidade e Rastreabilidade
 
-### 4. Independência
+Códigos semanticamente significativos facilitam identificação e depuração:
+- `"ALG001"` - Imediatamente reconhecível pela equipe
+- `"PROF-2023-001"` - Contém informação contextual
+- `"CAMPUS_CENTRO"` - Autoexplicativo
 
-Não depende de IDs internos da plataforma que podem mudar.
+### 4. Independência de Implementação
 
-## Boas Práticas
+A integração não depende de IDs internos da plataforma, que podem variar entre ambientes ou ser alterados em migrações.
 
-### Use Códigos Consistentes
+## Diretrizes e Boas Práticas
 
-✅ **Bom**:
+### 1. Consistência de Formato
+
+**Bom**:
 ```
 Disciplinas: ALG001, ALG002, BD001, BD002
 Professores: PROF001, PROF002, PROF003
 Alunos: ALU2024001, ALU2024002, ALU2024003
 ```
 
-❌ **Ruim** (inconsistente):
+**Ruim** (inconsistente):
 ```
 Disciplinas: alg1, Alg-002, bd_001
 Professores: prof1, Professor002, p003
 ```
 
-### Use Códigos Significativos
+### 2. Significado Semântico
 
-✅ **Bom**:
+**Bom**:
 ```
 "CAMPUS_CENTRO" - indica localização
 "ALG001" - sigla da disciplina
 "2025.1" - ano e semestre claro
 ```
 
-❌ **Ruim** (sem contexto):
+**Ruim** (sem contexto):
 ```
 "C1", "C2", "C3"
 "D1", "D2", "D3"
 ```
 
-### Mantenha Códigos Únicos
+### 3. Unicidade de Códigos
 
-Cada entidade deve ter code único:
+Cada entidade deve ter code único dentro de seu tipo:
 
 ```
 Professor code: "PROF001" - único entre todos os professores
@@ -173,21 +179,23 @@ Aluno code: "ALU2024001" - único entre todos os alunos
 Disciplina code: "ALG001" - único entre todas as disciplinas
 ```
 
-**Importante**: Codes podem se repetir entre **tipos diferentes**:
-- Professor com code "001" ✅
-- Aluno com code "001" ✅
-- São entidades diferentes, sem conflito
+**Observação Importante**: Codes podem ser idênticos entre tipos diferentes de entidades:
+- Professor com code "001"
+- Aluno com code "001"
+- Disciplina com code "001"
 
-### Use Códigos Estáveis
+Não há conflito pois são entidades de tipos distintos com escopos separados.
+
+### 4. Estabilidade dos Códigos
 
 Evite mudar codes após criação:
 
-✅ **Bom**:
+**Bom**:
 ```
 Matrícula do professor nunca muda: "PROF001"
 ```
 
-❌ **Ruim**:
+**Ruim**:
 ```
 Ano 1: "PROF-2024-001"
 Ano 2: "PROF-2025-001" (mudou sem necessidade)
@@ -319,7 +327,7 @@ Isso facilita identificação e evita conflitos entre semestres.
 
 ### Erro 1: Code Duplicado em Criação Inicial
 
-❌ **Problema**:
+**Problema**:
 ```json
 {
   "professors": [
@@ -331,7 +339,7 @@ Isso facilita identificação e evita conflitos entre semestres.
 
 **Erro**: Email duplicado (porque code duplicado tenta atualizar)
 
-✅ **Solução**: Codes únicos
+**Solução**: Codes únicos
 ```json
 {
   "professors": [
@@ -343,7 +351,7 @@ Isso facilita identificação e evita conflitos entre semestres.
 
 ### Erro 2: Referência a Code Inexistente
 
-❌ **Problema**:
+**Problema**:
 ```json
 {
   "enrollments": [
@@ -360,7 +368,7 @@ Isso facilita identificação e evita conflitos entre semestres.
 
 **Erro**: Subject not found
 
-✅ **Solução**: Sincronize disciplinas primeiro
+**Solução**: Sincronize disciplinas primeiro
 ```
 1. Sincronizar disciplina ALG999
 2. Depois sincronizar turma que usa ALG999
@@ -368,7 +376,7 @@ Isso facilita identificação e evita conflitos entre semestres.
 
 ### Erro 3: Code Inválido (Vazio ou Nulo)
 
-❌ **Problema**:
+**Problema**:
 ```json
 {
   "subjects": [
@@ -379,7 +387,7 @@ Isso facilita identificação e evita conflitos entre semestres.
 
 **Erro**: Code é obrigatório
 
-✅ **Solução**: Sempre forneça code válido
+**Solução**: Sempre forneça code válido
 ```json
 {
   "subjects": [
@@ -388,30 +396,26 @@ Isso facilita identificação e evita conflitos entre semestres.
 }
 ```
 
-## Checklist
+## Resumo Executivo
 
-Antes de sincronizar, verifique:
+### Princípios Fundamentais
 
-- [ ] Codes são únicos para cada entidade
-- [ ] Codes seguem padrão consistente
-- [ ] Codes não estão vazios ou nulos
-- [ ] Referências (subject_code, professor_code, etc.) existem
-- [ ] Codes não mudam desnecessariamente
+1. **Códigos Próprios**: Utilize identificadores do sistema origem
+2. **Idempotência**: Mesmo code atualiza registro existente ao invés de duplicar
+3. **Relacionamentos**: Vínculo entre entidades através de codes
+4. **Independência**: Não requer armazenamento de IDs internos da plataforma
+5. **Estabilidade**: Mantenha padrão consistente e evite alterações desnecessárias
 
-## Resumo
+### Checklist de Implementação
 
-1. **Os codes são definidos** - use seus próprios identificadores
-2. **Sincronização idempotente** - mesmo code atualiza ao invés de duplicar
-3. **Relacionamentos usam codes** - vincule entidades pelos codes
-4. **Não precisa armazenar IDs da plataforma** - os codes são suficientes
-5. **Mantenha consistência** - use padrão único e estável
+- [ ] Definir padrão de nomenclatura de codes por tipo de entidade
+- [ ] Garantir unicidade de codes dentro de cada tipo
+- [ ] Validar existência de codes referenciados antes de sincronizar
+- [ ] Implementar mecanismo de geração consistente de codes
+- [ ] Documentar convenções adotadas para equipe
 
 ## Próximos Passos
 
-1. Revise os [Conceitos Fundamentais](conceitos-fundamentais)
-2. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao)
-3. Consulte a [Postman Collection](postman) para exemplos
-
-## Suporte
-
-Para dúvidas sobre identificadores e codes, consulte a equipe técnica da ProExtend.
+1. Revisar [Conceitos Fundamentais](conceitos-fundamentais) para compreender modelo de dados
+2. Seguir [Fluxo de Sincronização](fluxo-de-sincronizacao) para implementar integração
+3. Consultar [Postman Collection](postman) para exemplos práticos de requisições

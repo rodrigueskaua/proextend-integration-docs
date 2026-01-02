@@ -108,7 +108,7 @@ Content-Type: application/json
 ### Exemplo de Requisição
 
 ```bash
-curl -X GET https://tenant.proextend.com.br/api/integration/v1/units \
+curl -X GET https://{{instituicao}}.proextend.com.br/api/integration/v1/units \
   -H "Authorization: Bearer pex_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6" \
   -H "Content-Type: application/json"
 ```

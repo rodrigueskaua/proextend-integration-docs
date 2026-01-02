@@ -35,7 +35,7 @@ Após importar a coleção, configure as seguintes variáveis:
 
 | Variável | Descrição | Exemplo |
 |----------|-----------|---------|
-| `base_url` | URL base da API | `https://tenant.proextend.com.br/api/integration/v1` |
+| `base_url` | URL base da API | `https://{{instituicao}}.proextend.com.br/api/integration/v1` |
 | `api_key` | Sua API Key | `pex_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6` |
 
 ### Passo 3: Testar Autenticação

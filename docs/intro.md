@@ -115,10 +115,10 @@ Consulte as seções "Erros Comuns" e "Tratamento de Erros" disponíveis em cada
 ### Base URL
 
 ```
-https://TENANT.proextend.com.br/api/integration/v1/
+https://{{instituicao}}.proextend.com.br/api/integration/v1/
 ```
 
-Substituir `TENANT` pelo identificador da instância.
+Substituir `{{instituicao}}` pela URL fornecida para sua instituição.
 
 Para especificação completa de endpoints, consulte [Fluxo de Sincronização](fluxo-de-sincronizacao).
 
@@ -157,10 +157,6 @@ Ordem obrigatória: Unidades → Áreas → Cursos → Disciplinas Base → Prof
 - **Enrollment (Turma)**: Instância de uma disciplina base em período letivo específico, com professor e alunos vinculados
 
 Referência: [Conceitos Fundamentais](conceitos-fundamentais).
-
-## Suporte Técnico
-
-Questões técnicas e problemas relacionados à integração devem ser direcionados à equipe técnica da ProExtend.
 
 ## Versionamento
 

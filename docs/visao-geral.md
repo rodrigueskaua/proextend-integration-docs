@@ -175,10 +175,10 @@ Resposta em caso de excedente de taxa:
 ### URL Base
 
 ```
-https://TENANT.proextend.com.br/api/integration/v1/
+https://{{instituicao}}.proextend.com.br/api/integration/v1/
 ```
 
-Substituir `TENANT` pelo identificador da instância.
+Substituir `{{instituicao}}` pela URL fornecida para sua instituição.
 
 ### Endpoints de Consulta
 
@@ -244,10 +244,6 @@ Para implementação da integração:
 2. Configurar [Autenticação](autenticacao) para obtenção de credenciais
 3. Implementar [Fluxo de Sincronização](fluxo-de-sincronizacao) conforme sequência especificada
 4. Aplicar diretrizes de [Identificadores e Codes](identificadores-e-codes)
-
-## Suporte Técnico
-
-Questões técnicas devem ser direcionadas à equipe técnica da ProExtend.
 
 ## Recursos de Monitoramento
 
