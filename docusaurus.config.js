@@ -58,6 +58,12 @@ const config = {
     ({
       // Replace with your project's social card
       image: 'img/logo.svg',
+      docs: {
+        sidebar: {
+          hideable: true,
+          autoCollapseCategories: true,
+        },
+      },
       navbar: {
         title: 'Integração ProExtend API',
         logo: {
