@@ -29,6 +29,7 @@ const sidebars = {
         'autenticacao',
         'fluxo-de-sincronizacao',
         'identificadores-e-codes',
+        'postman',
       ],
     },
   ],

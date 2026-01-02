@@ -7,7 +7,7 @@ title: Conceitos Fundamentais
 
 ## Introdução
 
-Este documento explica as entidades fundamentais da integração ProExtend e como elas se relacionam.
+Este documento detalha as entidades do sistema de integração ProExtend e seus relacionamentos.
 
 ## Modelo de Dados
 
@@ -54,9 +54,9 @@ Campus ou unidade física da instituição.
 
 #### Características
 
-- Entidade independente
-- Pode ter múltiplas áreas
-- Primeira entidade a ser sincronizada
+- Não depende de outras entidades
+- Pode conter múltiplas áreas
+- Deve ser sincronizada antes das demais entidades
 
 ---
 
@@ -147,15 +147,14 @@ Componente curricular que faz parte da grade do curso.
   "name": "Algoritmos e Programação I",
   "description": "Introdução a algoritmos e lógica de programação",
   "course_code": "CC001",
-  "type": "obrigatoria"
 }
 ```
 
 #### Características
 
 - **Depende de**: Curso
-- Representa matéria do currículo (**NÃO** tem vínculo com semestre ou alunos)
-- Disciplinas Base são usadas para criar Turmas (Enrollments)
+- Representa componente curricular permanente (sem vínculo com período letivo ou alunos)
+- Utilizada como base para criação de Turmas
 
 ---
 
@@ -187,11 +186,11 @@ Docente que leciona disciplinas na instituição.
 
 #### Características
 
-- Entidade independente (pode ser sincronizada a qualquer momento)
-- Email deve ser único em toda a instituição
+- Não depende de outras entidades (pode ser sincronizado a qualquer momento)
+- Email deve ser único
 - CPF deve ser único
-- Plataforma cria usuário automaticamente com senha aleatória
-- Pode lecionar em múltiplas turmas
+- Sistema cria credenciais de acesso automaticamente
+- Pode ser vinculado a múltiplas turmas
 
 ---
 
@@ -223,17 +222,17 @@ Discente matriculado em um curso da instituição.
 
 #### Características
 
-- Entidade independente (pode ser sincronizada a qualquer momento)
+- Não depende de outras entidades, exceto Curso
 - Email deve ser único
-- Campo `code` é flexível: pode ser matrícula, CPF ou RA
-- Plataforma cria usuário automaticamente
-- Pode estar matriculado em múltiplas turmas
+- Campo `code` aceita matrícula, CPF ou RA do sistema origem
+- Sistema cria credenciais de acesso automaticamente
+- Pode ser vinculado a múltiplas turmas
 
 ---
 
-### 7. Turma (Enrollment / Active Subject)
+### 7. Turma (Enrollment)
 
-Disciplina ativa vinculada a um semestre específico, com professor e alunos matriculados.
+Instância de uma Disciplina Base em período letivo específico, com professor responsável e alunos matriculados.
 
 #### Atributos
 
@@ -258,20 +257,20 @@ Disciplina ativa vinculada a um semestre específico, com professor e alunos mat
 #### Características
 
 - **Depende de**: Disciplina Base, Professor e Alunos
-- Representa disciplina **ativa** em um semestre específico
-- Vincula professor + alunos + disciplina + período
-- Se `code` já existir: atualiza professor e lista de alunos
-- Alunos removidos da lista são desvinculados automaticamente
+- Representa oferta de disciplina em período letivo
+- Vincula disciplina, professor, alunos e período acadêmico
+- Sincronizações com `code` existente atualizam professor e lista de alunos
+- Alunos removidos da lista são automaticamente desvinculados da turma
 
 ---
 
 ## Diferença: Disciplina Base vs Turma
 
-Esta é uma distinção importante:
+Distinção fundamental do modelo de dados:
 
 ### Disciplina Base (Subject)
 
-Cadastro **permanente** da matéria no currículo do curso.
+Registro permanente do componente curricular no catálogo do curso.
 
 ```json
 {
@@ -281,14 +280,14 @@ Cadastro **permanente** da matéria no currículo do curso.
 }
 ```
 
-- Não tem semestre
-- Não tem professor vinculado
-- Não tem alunos vinculados
-- É o "molde" para criar turmas
+- Sem vínculo com período letivo
+- Sem vínculo com professor
+- Sem vínculo com alunos
+- Utilizada como base para criação de turmas
 
 ### Turma (Enrollment)
 
-Instância **ativa** da disciplina em um semestre, com professor e alunos.
+Instância da disciplina base em período letivo específico, com professor e alunos vinculados.
 
 ```json
 {
@@ -300,70 +299,10 @@ Instância **ativa** da disciplina em um semestre, com professor e alunos.
 }
 ```
 
-- Tem semestre definido
-- Tem professor responsável
-- Tem alunos matriculados
-- É a "turma real" que acontece
-
-### Exemplo Visual
-
-```
-DISCIPLINA BASE (Cadastro no Currículo)
-┌──────────────────────────────────┐
-│ code: ALG001                     │
-│ name: Algoritmos I               │
-│ course: Ciência da Computação    │
-└──────────────────────────────────┘
-              ↓
-        (usada para criar)
-              ↓
-TURMAS (Disciplinas Ativas por Semestre)
-┌─────────────────────────────────────┐
-│ code: ALG001-2025.1                 │
-│ subject: ALG001                     │
-│ professor: Prof. João (PROF001)     │
-│ semester: 2025.1                    │
-│ students: 30 alunos                 │
-└─────────────────────────────────────┘
-┌─────────────────────────────────────┐
-│ code: ALG001-2025.2                 │
-│ subject: ALG001                     │
-│ professor: Profa. Maria (PROF002)   │
-│ semester: 2025.2                    │
-│ students: 35 alunos                 │
-└─────────────────────────────────────┘
-```
-
-## Relacionamentos entre Entidades
-
-### Dependências de Criação
-
-Ordem obrigatória para sincronização:
-
-```
-1. Unidades/Campus (Units) - independente
-   ↓
-2. Áreas (Areas) - depende de Unidades
-   ↓
-3. Cursos (Courses) - depende de Unidades + Áreas
-   ↓
-4. Disciplinas Base (Subjects) - depende de Cursos
-
-5. Professores (Professors) - independente
-6. Alunos (Students) - independente, mas depende de Cursos
-
-7. Disciplinas Ativas/Turmas (Enrollments) - depende de Disciplinas Base + Professores + Alunos
-```
-
-### Diagrama de Relacionamentos
-
-```
-Unidade/Campus (Unit) ──→ Área (Area) ──→ Curso (Course) ──→ Disciplina Base (Subject)
-                                                                        ↓
-                                                        Disciplina Ativa/Turma (Enrollment) ←── Professor (Professor)
-                                                                        ↑
-                                                                   Aluno (Student)
-```
+- Vinculada a período letivo específico
+- Vinculada a professor responsável
+- Vinculada a alunos matriculados
+- Representa oferta efetiva da disciplina
 
 ## Campos Obrigatórios vs Opcionais
 
@@ -371,28 +310,17 @@ Unidade/Campus (Unit) ──→ Área (Area) ──→ Curso (Course) ──→ 
 
 | Entidade | Campos Obrigatórios | Campos Opcionais |
 |----------|---------------------|------------------|
-| Unidade/Campus (Unit) | code, name | address |
+| Unidade (Unit) | code, name | address |
 | Área (Area) | code, name, unit_code | responsible_email |
 | Curso (Course) | code, name, area_code, unit_code, responsible* | description |
 | Disciplina Base (Subject) | code, name, course_code | description, type |
 | Professor (Professor) | code, name, email, cpf | phone, area_code |
 | Aluno (Student) | code, name, email, course_code | cpf, phone |
-| Disciplina Ativa/Turma (Enrollment) | code, subject_code, professor_code, semester, student_codes | - |
+| Turma (Enrollment) | code, subject_code, professor_code, semester, student_codes | - |
 
 \* Course requer `responsible_email` **OU** `responsible_code`
 
 ## Boas Práticas
-
-### Nomenclatura de Codes
-
-✅ **Bom**:
-- Unidades: `"CAMPUS_CENTRO"`, `"SEDE"`, `"FILIAL_SP"`
-- Disciplinas: `"ALG001"`, `"BD002"`, `"LIBRAS"`
-- Turmas: `"ALG001-2025.1"`, `"TURMA-2025.1-001"`
-
-❌ **Evite**:
-- Codes genéricos: `"001"`, `"ABC"`, `"X"`
-- Inconsistência: `"alg1"`, `"Alg-002"`, `"ALG_003"`
 
 ### Regras de Validação de Campos
 
@@ -411,26 +339,26 @@ Unidade/Campus (Unit) ──→ Área (Area) ──→ Curso (Course) ──→ 
 - Codes: Valida unicidade dentro do tipo de entidade
 - Referências: Valida existência antes de criar vínculo
 
-### Tratamento de Códigos
+### Utilização de Identificadores
 
-Utilize códigos do próprio sistema:
-- Matrícula do professor: `"PROF-2023-001"`
-- Código da disciplina: `"CC-ALG-001"`
-- RA do aluno: `"202410001"`
+Utilize identificadores existentes no sistema origem (ERP):
+- Matrícula de professor: `"PROF-2023-001"`
+- Código de disciplina: `"CC-ALG-001"`
+- RA de aluno: `"202410001"`
 
-**Não invente códigos novos**. Utilize os códigos existentes no ERP.
+Os identificadores devem corresponder aos codes já utilizados no ERP institucional.
 
 ## Glossário
 
-- **Unidade/Campus (Unit)**: Campus ou filial da instituição
-- **Área (Area)**: Área de conhecimento (ex: Tecnologia, Saúde)
-- **Curso (Course)**: Curso de graduação/pós-graduação
-- **Disciplina Base (Subject)**: Disciplina do currículo (cadastro base, sem semestre)
-- **Disciplina Ativa/Turma (Enrollment)**: Turma ativa (disciplina + semestre + professor + alunos)
-- **Professor (Professor)**: Docente
-- **Aluno (Student)**: Discente
-- **Code**: Identificador único definido pelo ERP
-- **Semestre (Semester)**: Período letivo (formato "YYYY.N")
+- **Unidade (Unit)**: Campus ou unidade organizacional da instituição
+- **Área (Area)**: Área de conhecimento que agrupa cursos relacionados
+- **Curso (Course)**: Programa acadêmico de graduação ou pós-graduação
+- **Disciplina Base (Subject)**: Componente curricular permanente (sem vínculo temporal)
+- **Turma (Enrollment)**: Instância de disciplina base em período letivo, com professor e alunos
+- **Professor (Professor)**: Docente responsável por ministrar disciplinas
+- **Aluno (Student)**: Discente matriculado em curso
+- **Code**: Identificador único do sistema origem (ERP)
+- **Período Letivo (Semester)**: Semestre acadêmico (formato "YYYY.N")
 
 ## Próximos Passos
 

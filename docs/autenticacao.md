@@ -7,43 +7,39 @@ title: Autenticação
 
 ## Introdução
 
-A autenticação na API de Integração ProExtend é baseada em **API Keys** geradas diretamente no painel administrativo da plataforma.
-
-**Não há processo de login via API**. A API Key é gerada uma vez no painel e usa em todas as requisições.
+A API de Integração ProExtend utiliza autenticação baseada em API Keys. As credenciais são geradas no painel administrativo da plataforma e possuem validade indefinida, sendo incluídas no header Authorization de todas as requisições.
 
 ## Como Funciona
 
-### Modelo Simplificado
+### Fluxo de Autenticação
 
 ```
-1. Admin acessa painel ProExtend
+1. Administrador acessa painel ProExtend
    ↓
-2. Gera API Key com configurações
+2. Gera API Key com configurações de escopo e rate limit
    ↓
-3. Copia token (pex_xxxxxxxxxxxxxxxxxxxxxxxx)
+3. Copia token gerado (formato: pex_xxxxxxxxxxxxxxxxxxxxxxxx)
    ↓
-4. Usa token no header Authorization de todas as requisições
+4. Inclui token no header Authorization de todas as requisições
 ```
-
-**Pronto!** Não há renovação, não há login separado, não há token de sessão.
 
 ## Gerando API Key no Painel Administrativo
 
-**IMPORTANTE**: Apenas administradores com as permissões necessárias podem gerar, editar ou deletar API Keys de autenticação.
+Apenas administradores com permissões adequadas podem gerenciar API Keys de autenticação.
 
 ### Passo 1: Acessar Área de Integrações
 
-1. Faça login no painel administrativo do ProExtend como administrador
-2. Navegue até: **Avançado > Integrações**
-3. Serão exibidos a lista de API Keys existentes (se houver)
+1. Acesse o painel administrativo do ProExtend
+2. Navegue para: **Avançado > Integrações**
+3. Visualize a lista de API Keys existentes
 
 ### Passo 2: Criar Nova API Key
 
-Clique em **"Gerar Nova API Key"** ou **"Criar API Client"**
+Selecione **"Gerar Nova API Key"** ou **"Criar API Client"**
 
 ### Passo 3: Configurar API Client
 
-Preencha as informações:
+Configure os parâmetros:
 
 #### Nome
 Identificador descritivo para a integração.
@@ -57,22 +53,19 @@ Identificador descritivo para a integração.
 
 Defina o nível de permissão:
 
-- **read**: Apenas leitura (endpoints GET)
-  - Listar unidades, professores, alunos, etc.
-  - Buscar dados específicos
-  - Consultar status de sincronização
+- **read**: Operações de leitura (endpoints GET)
+  - Listar unidades, professores, alunos
+  - Consultar dados específicos
+  - Verificar status de sincronização
 
-- **write**: Apenas escrita (endpoints POST /sync)
+- **write**: Operações de escrita (endpoints POST /sync)
   - Sincronizar dados
-  - Criar/atualizar registros
-  - **Não permite consultas**
+  - Criar e atualizar registros
+  - Não permite operações de consulta
 
 - **full**: Acesso completo (read + write)
-  - Todas as operações de leitura
-  - Todas as operações de sincronização
-  - **Recomendado para integrações completas**
-
-**Recomendação**: Use `full` para integrações completas de ERP.
+  - Operações de leitura e escrita
+  - Recomendado para integrações completas
 
 #### Rate Limit (Limite de Requisições)
 
@@ -93,13 +86,13 @@ Após criar, a plataforma exibe a API Key gerada:
 pex_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
 ```
 
-**CRÍTICO - ATENÇÃO**:
-- **A chave completa só é exibida UMA VEZ** durante a criação
-- Copie e armazene imediatamente em local seguro
-- **Não será possível visualizar a chave novamente** após fechar esta tela
-- Se perder a chave, será necessário gerar uma nova API Key
-- **Gerar uma nova API Key desconectará todos os serviços** que usam a chave atual
-- Planeje a substituição da chave em todos os sistemas antes de regenerar
+Nota de segurança:
+- A chave é exibida apenas uma vez durante a criação
+- Armazene imediatamente em local seguro
+- Não será possível visualizar novamente após fechar
+- Perda da chave requer geração de nova API Key
+- Regeneração invalida imediatamente a chave anterior
+- Planeje substituição em todos os sistemas antes de regenerar
 
 ## Usando API Key nas Requisições
 
@@ -136,48 +129,49 @@ No painel administrativo:
 
 ### Editar API Key
 
-É possível atualizar:
-- ✅ Nome da integração
-- ✅ Scope de acesso
-- ✅ Rate limit
-- ❌ Token (não pode ser editado, apenas regenerado)
+Campos editáveis:
+- Nome da integração
+- Scope de acesso
+- Rate limit
+
+Nota: Token não pode ser editado, apenas regenerado.
 
 ### Regenerar API Key
 
-Se a chave foi comprometida ou perdida:
+Procedimento para chaves comprometidas ou perdidas:
 
-**ATENÇÃO**: Regenerar uma API Key desconectará imediatamente todos os serviços que a utilizam.
+Nota: Regeneração invalida imediatamente todos os serviços que utilizam a chave.
 
 1. Acesse a API Key específica
-2. Clique em **"Regenerar Token"**
-3. Confirme a ação
-4. **CRÍTICO**: O token antigo será **invalidado imediatamente**
-5. **A nova chave será exibida apenas uma vez** - copie imediatamente
-6. Atualize a nova chave em **todos os sistemas** que usam a integração
+2. Selecione "Regenerar Token"
+3. Confirme a operação
+4. Token anterior é invalidado imediatamente
+5. Nova chave é exibida apenas uma vez
+6. Atualize em todos os sistemas integrados
 
-**Recomendação**:
-- Planeje a substituição com antecedência
-- Atualize todos os sistemas em paralelo para minimizar downtime
-- Considere criar uma nova API Key temporária ao invés de regenerar, permitindo migração gradual
+Recomendações:
+- Planeje substituição antecipadamente
+- Atualize sistemas em paralelo para minimizar interrupção
+- Considere criar nova API Key temporária para migração gradual
 
 ### Ativar/Desativar API Key
 
-É possível desativar temporariamente uma API Key sem deletá-la:
+Desativação temporária sem remoção permanente:
 
 1. Acesse a API Key específica
-2. Clique em **"Desativar"** ou use o toggle de status
-3. Requisições com essa chave retornarão erro 401
+2. Utilize opção "Desativar" ou toggle de status
+3. Requisições retornarão erro 401
 
-**Uso**: Útil para manutenção ou suspensão temporária da integração.
+Aplicação: Manutenção ou suspensão temporária da integração.
 
 ### Deletar API Key
 
-Para remover permanentemente:
+Remoção permanente:
 
 1. Acesse a API Key específica
-2. Clique em **"Deletar"**
-3. Confirme a ação
-4. A chave é removida e não pode ser recuperada
+2. Selecione "Deletar"
+3. Confirme a operação
+4. Chave removida permanentemente sem possibilidade de recuperação
 
 ## Monitoramento e Logs
 
@@ -228,9 +222,9 @@ Acesse estatísticas detalhadas:
 }
 ```
 
-**Causas**: API Key incorreta, desativada, deletada ou ausente no header
+Causas: API Key incorreta, desativada, deletada ou ausente no header
 
-**Solução**: Verificar token e status no painel (Avançado > Integrações)
+Solução: Verificar token e status no painel (Avançado > Integrações)
 
 #### 403 Forbidden
 ```json
@@ -241,9 +235,9 @@ Acesse estatísticas detalhadas:
 }
 ```
 
-**Causas**: Tentativa de sincronizar com scope `read` ou consultar com scope `write`
+Causas: Tentativa de sincronizar com scope `read` ou consultar com scope `write`
 
-**Solução**: Alterar scope para `full` no painel
+Solução: Alterar scope para `full` no painel
 
 #### 429 Too Many Requests
 ```json
@@ -255,9 +249,9 @@ Acesse estatísticas detalhadas:
 }
 ```
 
-**Causas**: Excesso de requisições (limite por minuto atingido)
+Causas: Excesso de requisições (limite por minuto atingido)
 
-**Solução**: Aguardar `retry_after` segundos, implementar backoff exponencial ou aumentar rate limit no painel
+Solução: Aguardar `retry_after` segundos, implementar backoff exponencial ou aumentar rate limit no painel
 
 ## Segurança
 
@@ -270,20 +264,6 @@ Acesse estatísticas detalhadas:
 - Regenere se houver suspeita de vazamento
 - Teste nova chave antes de invalidar antiga
 
-### Em Caso de Vazamento
-
-Se a API Key foi exposta:
-
-1. **Acesse imediatamente o painel**
-2. **Desative a API Key** (interrompe acesso imediatamente)
-3. **Gere uma nova API Key** (será exibida apenas uma vez - copie!)
-4. **Atualize a nova chave em todos os sistemas**
-5. **Delete a API Key comprometida**
-6. **Revise logs** para identificar acessos não autorizados
-7. **Notifique equipe de segurança** se necessário
-
-**Lembre-se**: A nova API Key será exibida apenas uma vez. Certifique-se de copiá-la antes de fechar a tela de criação.
-
 ## Checklist de Configuração
 
 Antes de iniciar a integração:
@@ -293,19 +273,19 @@ Antes de iniciar a integração:
 - [ ] Rate limit adequado ao volume de sincronização
 - [ ] API Key armazenada com segurança
 - [ ] Header `Authorization` configurado corretamente
-- [ ] Teste de conexão realizado (`GET /health`)
 - [ ] Tratamento de erros 401, 403 e 429 implementado
 - [ ] Logs de acesso configurados
 - [ ] Documentação interna criada (quem tem acesso)
 
 ## Próximos Passos
 
-Após configurar a autenticação:
+1. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao)
+2. Consulte [Identificadores e Codes](identificadores-e-codes)
 
-1. Teste a conexão com [Health Check](fluxo-de-sincronizacao#verificando-disponibilidade)
-2. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao) completo
-3. Entenda [Identificadores e Codes](identificadores-e-codes)
+## Recursos Adicionais
+
+Consulte a [Postman Collection](postman) para exemplos práticos de requisições e testes de autenticação.
 
 ## Suporte
 
-Para problemas de autenticação, geração ou renovação de API Keys, entre em contato com a equipe técnica da ProExtend.
+Questões relacionadas a autenticação devem ser direcionadas à equipe técnica da ProExtend.

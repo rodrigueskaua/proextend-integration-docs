@@ -9,151 +9,151 @@ title: Visão Geral
 
 A API de Integração ProExtend permite que sistemas de gestão acadêmica (ERPs) sincronizem dados com a plataforma ProExtend. Esta API possibilita a sincronização bidirecional de dados acadêmicos incluindo unidades, áreas, cursos, disciplinas, professores, alunos e matrículas.
 
-## Modelo de Comunicação
+## Arquitetura de Comunicação
 
 ```
-Sistema Acadêmico (ERP)    →    ProExtend API
-   da Instituição                (Plataforma)
+Sistema Origem          →    API ProExtend
+(Instituição)                    (Plataforma)
 
-   - Envia dados          →    - Valida dados
-   - Usa codes próprios   →    - Cria/atualiza registros
-   - Sincroniza dados     →    - Mantém consistência
+- Submissão de dados        →    - Validação de payload
+- Identificadores próprios  →    - Persistência/atualização
+- Sincronização periódica   →    - Garantia de consistência
 ```
 
-### Características Principais
+### Características Arquiteturais
 
-1. **Baseado em Codes**: O sistema utiliza seus próprios identificadores (códigos de disciplinas, matrículas, etc.)
-2. **Idempotente**: Pode executar sincronizações múltiplas vezes sem duplicar dados
-3. **RESTful**: Padrão REST com JSON
-4. **Autenticação simples**: API Key gerada no painel administrativo
+1. **Sistema de Identificação Baseado em Codes**: Utiliza identificadores do sistema origem
+2. **Operações Idempotentes**: Sincronizações múltiplas não resultam em duplicação de dados
+3. **Arquitetura RESTful**: Protocolo HTTP com payloads JSON
+4. **Autenticação via API Key**: Credenciais de longa duração geradas administrativamente
 
-## Autenticação
+## Mecanismo de Autenticação
 
-A API utiliza **API Keys** geradas no painel administrativo (Avançado > Integrações).
+A API implementa autenticação baseada em API Keys geradas através do painel administrativo (Avançado > Integrações).
 
-**Não há processo de login via API**. A API Key é incluída no header `Authorization: Bearer {token}` de todas as requisições.
+## Sistema de Identificadores (Codes)
 
-**Importante**: API Key é exibida apenas uma vez durante criação. Guia completo em [Autenticação](autenticacao).
+O sistema utiliza identificadores próprios do ERP origem (denominados "codes") para todas as entidades. A API ProExtend não gera novos identificadores.
 
-## Identificadores (Codes)
+O mapeamento de entidades é realizado exclusivamente através dos codes fornecidos. Não é necessário armazenar IDs internos da plataforma.
 
-O sistema utiliza **identificadores próprios** (codes) do ERP para todas as entidades.
+A API possui comportamento idempotente: ao sincronizar uma entidade cujo code já existe, os dados são atualizados sem criar registros duplicados.
 
-**Não é necessário** armazenar IDs internos da plataforma. Utilize códigos que já existem no sistema acadêmico.
+Especificação detalhada em [Identificadores e Codes](identificadores-e-codes).
 
-**Idempotência**: Sincronizar múltiplas vezes com mesmo code atualiza ao invés de duplicar.
+## Modelo de Dados
 
-Detalhes completos em [Identificadores e Codes](identificadores-e-codes).
-
-## Entidades Principais
-
-A integração trabalha com as seguintes entidades:
+O sistema opera com as seguintes entidades:
 
 ### 1. Unidades (Units)
-Campus ou unidades físicas da instituição.
+Representam campus ou unidades físicas da instituição de ensino.
 
-**Exemplo**: Campus Centro, Campus Norte
+Exemplo: Campus Centro, Campus Norte
 
 ### 2. Áreas (Areas)
-Áreas de conhecimento que agrupam cursos.
+Áreas de conhecimento que agrupam cursos relacionados.
 
-**Exemplo**: Tecnologia da Informação, Ciências da Saúde
+Exemplo: Tecnologia da Informação, Ciências da Saúde
 
 ### 3. Cursos (Courses)
-Cursos oferecidos pela instituição.
+Programas acadêmicos oferecidos pela instituição.
 
-**Exemplo**: Ciência da Computação, Enfermagem
+Exemplo: Ciência da Computação, Enfermagem
 
 ### 4. Disciplinas Base (Subjects)
-Componentes curriculares que fazem parte dos cursos (grade curricular).
+Componentes curriculares que compõem a grade de cursos.
 
-**Exemplo**: Algoritmos I, Banco de Dados, LIBRAS
+Exemplo: Algoritmos I, Banco de Dados, LIBRAS
 
-**Importante**: Disciplinas Base são o cadastro no currículo, **sem** vínculo com semestre ou alunos.
+Nota: Disciplinas Base representam o cadastro curricular permanente, sem vínculo com períodos letivos ou discentes.
 
 ### 5. Professores (Professors)
-Docentes que lecionam disciplinas.
+Docentes responsáveis por ministrar disciplinas.
 
-**Exemplo**: Dr. João Silva, Dra. Maria Santos
+Exemplo: João Silva, Maria Santos
 
 ### 6. Alunos (Students)
-Discentes matriculados nos cursos.
+Discentes matriculados em programas acadêmicos.
 
-**Exemplo**: Pedro Oliveira, Ana Costa
+Exemplo: Pedro Oliveira, Ana Costa
 
-### 7. Turmas (Enrollments / Active Subjects)
-Disciplinas ativas vinculadas a um semestre específico, com professor e alunos matriculados.
+### 7. Turmas (Enrollments)
+Instâncias de disciplinas base vinculadas a período letivo específico, incluindo docente responsável e discentes matriculados.
 
-**Exemplo**: "Algoritmos I - 2025.1" (turma com 30 alunos, Prof. João)
+Exemplo: "Algoritmos I - 2025.1" (turma com 30 alunos, Prof. João)
 
-**Importante**: Turmas são instâncias de Disciplinas Base em um período letivo.
+Nota: Turmas são instâncias de Disciplinas Base em um período letivo.
 
-## Diferença: Disciplina Base vs Turma
+## Distinção: Disciplina Base vs Turma
 
-- **Disciplina Base (Subject)**: Cadastro permanente no currículo (sem semestre, sem alunos)
-- **Turma (Enrollment)**: Disciplina ativa em um semestre com professor e alunos matriculados
+- **Disciplina Base (Subject)**: Registro permanente no catálogo curricular, sem vínculo temporal ou matrícula de alunos
+- **Turma (Enrollment)**: Instância de disciplina base em período letivo determinado, com docente e discentes vinculados
 
-Explicação detalhada em [Conceitos Fundamentais](conceitos-fundamentais#diferen%C3%A7a-disciplina-base-vs-turma).
+Detalhamento em [Conceitos Fundamentais](conceitos-fundamentais).
 
 ## Hierarquia de Entidades
 
-Unidades → Áreas → Cursos → Disciplinas Base
+Estrutura hierárquica: Unidades → Áreas → Cursos → Disciplinas Base
 
-Turmas vinculam: Disciplina Base + Professor + Alunos
+Relacionamento de Turmas: Disciplina Base + Professor + Alunos
 
-Ver hierarquia completa em [Conceitos Fundamentais](conceitos-fundamentais#hierarquia-de-entidades).
+Especificação completa em [Conceitos Fundamentais](conceitos-fundamentais).
 
-## Fluxo de Integração
+## Processo de Integração
 
-### Setup Inicial
-1. Gerar API Key no painel administrativo
-2. Sincronizar entidades na ordem: Unidades → Áreas → Cursos → Disciplinas Base → Professores/Alunos → Turmas
+### Configuração Inicial
 
-### Atualizações
-Enviar apenas dados alterados. API atualiza automaticamente com base no code.
+1. Geração de API Key via painel administrativo
+2. Sincronização de entidades respeitando ordem de dependências: Units → Areas → Courses → Subjects → Professors/Students → Enrollments
 
-Detalhes completos em [Fluxo de Sincronização](fluxo-de-sincronizacao).
+### Sincronização Incremental
 
-## Operações Disponíveis
+Submissão de entidades modificadas. A API realiza atualização baseada em identificador (code).
 
-### Consulta (GET)
-Listar e buscar dados sincronizados.
+Especificação detalhada em [Fluxo de Sincronização](fluxo-de-sincronizacao).
 
-**Scope necessário**: `read` ou `full`
+## Operações Suportadas
 
-**Exemplos**:
-- `GET /integration/v1/units` - Listar unidades
-- `GET /integration/v1/professors/PROF001` - Buscar professor por código
+### Operações de Consulta (GET)
 
-### Sincronização (POST)
-Criar ou atualizar dados em lote.
+Recuperação de dados sincronizados.
 
-**Scope necessário**: `write` ou `full`
+Permissão requerida: scope `read` ou `full`
 
-**Exemplos**:
-- `POST /integration/v1/units/sync` - Sincronizar unidades
-- `POST /integration/v1/students/sync` - Sincronizar alunos
+Exemplos:
+- `GET /integration/v1/units` - Listagem de unidades
+- `GET /integration/v1/professors/PROF001` - Recuperação de professor por identificador
 
-**Comportamento**:
-- Se entidade com `code` existir: **atualiza** dados
-- Se não existir: **cria** novo registro
-- Operação é **idempotente** (pode executar múltiplas vezes)
+### Operações de Sincronização (POST)
 
-## Segurança e Autenticação
+Criação ou atualização de entidades em lote.
 
-### Scopes de Acesso
+Permissão requerida: scope `write` ou `full`
 
-Ao gerar a API Key, define-se o scope:
+Exemplos:
+- `POST /integration/v1/units/sync` - Sincronização de unidades
+- `POST /integration/v1/students/sync` - Sincronização de alunos
 
-- **read**: Permite apenas leitura (endpoints GET)
-- **write**: Permite sincronização (endpoints POST /sync)
-- **full**: Acesso completo (read + write)
+Comportamento de sincronização:
+- Entidade com code existente: atualização de dados
+- Entidade com code inexistente: criação de novo registro
+- Operação idempotente: execução múltipla não resulta em duplicação
 
-### Rate Limiting
+## Segurança e Controle de Acesso
 
-Limite configurável por API Client (padrão: 60 requisições/minuto).
+### Escopos de Autorização
 
-Quando atingido o limite, a API retorna:
+Cada API Key é configurada com escopo de acesso específico:
+
+- **read**: Permissão de leitura (endpoints GET)
+- **write**: Permissão de sincronização (endpoints POST /sync)
+- **full**: Permissão completa (leitura e escrita)
+
+### Limitação de Taxa (Rate Limiting)
+
+Limite configurável por cliente API (padrão: 60 requisições/minuto).
+
+Resposta em caso de excedente de taxa:
 
 ```json
 {
@@ -164,32 +164,23 @@ Quando atingido o limite, a API retorna:
 }
 ```
 
-### Comunicação Segura
+### Requisitos de Segurança
 
-- **HTTPS obrigatório**: Todas as requisições devem usar protocolo seguro
-- **Isolamento de dados**: Cada instituição acessa apenas seus próprios dados
-- **API Key única**: Cada integração tem credenciais exclusivas
+- **Protocolo HTTPS**: Obrigatório para todas as requisições
+- **Isolamento de Dados**: Cada instituição acessa exclusivamente seus próprios dados
+- **Credenciais Exclusivas**: API Keys únicas por integração
 
-## Endpoints da API
+## Especificação de Endpoints
 
-### Base URL
+### URL Base
 
 ```
 https://TENANT.proextend.com.br/api/integration/v1/
 ```
 
-Substitua `TENANT` pelo subdomínio correspondente.
+Substituir `TENANT` pelo identificador da instância.
 
-### Principais Endpoints
-
-#### Status e Monitoramento
-
-```
-GET /integration/v1/health              (público, sem autenticação)
-GET /integration/v1/sync-status         (requer API Key)
-```
-
-#### Consultas (GET)
+### Endpoints de Consulta
 
 ```
 GET /integration/v1/units
@@ -202,7 +193,7 @@ GET /integration/v1/students
 GET /integration/v1/enrollments
 ```
 
-#### Sincronização (POST)
+### Endpoints de Sincronização
 
 ```
 POST /integration/v1/units/sync
@@ -214,10 +205,10 @@ POST /integration/v1/students/sync
 POST /integration/v1/enrollments/sync
 ```
 
-## Exemplo Básico
+## Exemplo de Utilização
 
 ```bash
-# 1. Sincronizar
+# Sincronização de professor
 POST /integration/v1/professors/sync
 Authorization: Bearer pex_...
 
@@ -230,36 +221,34 @@ Authorization: Bearer pex_...
   }]
 }
 
-# 2. Consultar
+# Consulta de professor
 GET /integration/v1/professors/PROF001
 Authorization: Bearer pex_...
 ```
 
 Exemplos completos em [Fluxo de Sincronização](fluxo-de-sincronizacao).
 
-## Vantagens da Integração
+## Características da Solução
 
-1. **Simplicidade**: Utilize códigos próprios, sem IDs internos
-2. **Idempotência**: Execute sincronizações quantas vezes quiser sem duplicar
-3. **Flexibilidade**: Sincronize todas as entidades ou apenas as alteradas
-4. **Rastreabilidade**: Todos os dados ficam vinculados aos codes do sistema
-5. **Segurança**: Isolamento total de dados entre instituições
+1. **Independência de Identificadores Internos**: Utilização de códigos do sistema origem
+2. **Operações Idempotentes**: Sincronizações múltiplas sem efeitos colaterais
+3. **Sincronização Seletiva**: Possibilidade de sincronizar subconjuntos de entidades
+4. **Rastreabilidade**: Vinculação de dados através de identificadores do sistema origem
+5. **Isolamento Multi-tenant**: Segregação completa de dados entre instituições
 
-## Próximos Passos
+## Próximas Etapas
 
-Após compreender a visão geral da integração:
+Para implementação da integração:
 
-1. Leia [Conceitos Fundamentais](conceitos-fundamentais) para entender as entidades em detalhes
-2. Configure [Autenticação](autenticacao) para começar a testar
-3. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao) passo a passo
-4. Implemente corretamente conforme [Identificadores e Codes](identificadores-e-codes)
+1. Revisar [Conceitos Fundamentais](conceitos-fundamentais) para compreensão do modelo de dados
+2. Configurar [Autenticação](autenticacao) para obtenção de credenciais
+3. Implementar [Fluxo de Sincronização](fluxo-de-sincronizacao) conforme sequência especificada
+4. Aplicar diretrizes de [Identificadores e Codes](identificadores-e-codes)
 
-## Suporte
+## Suporte Técnico
 
-Para questões sobre a integração ou problemas técnicos, consulte a equipe técnica da ProExtend.
+Questões técnicas devem ser direcionadas à equipe técnica da ProExtend.
 
-## Recursos Adicionais
+## Recursos de Monitoramento
 
-- **Coleção Postman**: Teste todos os endpoints com exemplos prontos
-- **Health Check**: Monitore disponibilidade da API
-- **Sync Status**: Acompanhe status das sincronizações
+- **Sync Status**: Endpoint para monitoramento de estado de sincronização (`GET /integration/v1/sync-status`)

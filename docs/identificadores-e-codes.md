@@ -410,7 +410,7 @@ Antes de sincronizar, verifique:
 
 1. Revise os [Conceitos Fundamentais](conceitos-fundamentais)
 2. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao)
-3. Consulte a [Coleção Postman](#) para exemplos
+3. Consulte a [Postman Collection](postman) para exemplos
 
 ## Suporte
 

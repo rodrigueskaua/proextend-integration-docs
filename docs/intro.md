@@ -6,116 +6,111 @@ title: Introdução
 
 # Documentação de Integração - ProExtend API
 
-Documentação oficial para integração de sistemas acadêmicos (ERPs) com a plataforma ProExtend.
+Documentação técnica para integração de sistemas de gestão acadêmica com a plataforma ProExtend.
 
-## Sobre esta Documentação
+## Escopo da Documentação
 
-Esta documentação foi desenvolvida para auxiliar equipes técnicas de instituições de ensino a integrar seus sistemas acadêmicos com a plataforma ProExtend.
+Esta documentação especifica os processos, conceitos e fluxos de sincronização necessários para garantir a interoperabilidade entre sistemas de gestão acadêmica (ERP) e a plataforma ProExtend. O escopo abrange processos de integração completos, incluindo modelo de dados, mecanismos de autenticação e padrões de sincronização.
 
-O foco está em explicar **processos, conceitos e fluxos completos de sincronização**, não apenas endpoints isolados.
+## Público-Alvo
 
-## Para Quem é
+Esta documentação destina-se a:
 
-- Desenvolvedores responsáveis pela integração
-- Arquitetos de software das instituições
-- Equipes de TI que precisam implementar a sincronização
-- Gestores técnicos que precisam planejar a integração
+- Desenvolvedores responsáveis pela implementação da integração
+- Arquitetos de software que projetam a solução de integração
+- Equipes de TI responsáveis pela sincronização de dados
+- Gestores técnicos envolvidos no planejamento da integração
 
 ## Estrutura da Documentação
 
-A documentação está organizada de forma progressiva, do conceitual ao prático:
+A documentação está organizada de forma hierárquica, partindo de conceitos fundamentais até implementação prática.
 
-### [1. Visão Geral](visao-geral)
+### 1. Visão Geral
 
-Comece aqui! Entenda:
-- Objetivo da integração
-- Como funciona a autenticação (geração de API Key)
-- Padrão de codes (o sistema utiliza identificadores próprios)
-- Entidades principais
-- Diferença entre Disciplinas Base e Turmas
+Apresenta o panorama completo da integração:
+- Objetivos e modelo de comunicação
+- Mecanismo de autenticação via API Key
+- Sistema de identificadores (codes)
+- Entidades do modelo de dados
 - Fluxo geral de sincronização
 
-**Leia primeiro** se esta é a primeira vez com a API.
+Referência: [Visão Geral](visao-geral)
 
-### [2. Conceitos Fundamentais](conceitos-fundamentais)
+### 2. Conceitos Fundamentais
 
-Entenda as entidades e seus relacionamentos:
-- Unidades, Áreas, Cursos
-- Disciplinas Base vs Turmas
+Detalha as entidades do sistema e seus relacionamentos:
+- Unidades, Áreas e Cursos
+- Disciplinas Base x Turmas
 - Professores e Alunos
-- Hierarquia e dependências
-- Campos obrigatórios e opcionais
+- Hierarquia e dependências entre entidades
+- Especificação de campos obrigatórios e opcionais
 
-**Importante** para entender o modelo de dados completo.
+Referência: [Conceitos Fundamentais](conceitos-fundamentais)
 
-### [3. Autenticação](autenticacao)
+### 3. Autenticação
 
-Configure acesso à API:
-- Como gerar API Key no painel administrativo
-- Usar API Key nas requisições (não há login separado)
-- Gerenciamento de chaves
-- Scopes de acesso (read, write, full)
-- Rate limiting
-- Segurança e boas práticas
+Especifica o processo de autenticação:
+- Geração de API Key no painel administrativo
+- Utilização da API Key em requisições HTTP
+- Gerenciamento e revogação de chaves
+- Scopes de acesso
+- Políticas de rate limiting
+- Diretrizes de segurança
 
-**Configure antes** de começar a sincronizar.
+Referência: [Autenticação](autenticacao)
 
-### [4. Fluxo de Sincronização](fluxo-de-sincronizacao)
+### 4. Fluxo de Sincronização
 
-Passo a passo completo de sincronização:
-- Ordem correta (Unidades/Campus (Units) → Áreas (Areas) → Cursos (Courses) → Disciplinas Base (Subjects) → Professores (Professors) → Alunos (Students) → Disciplinas Ativas/Turmas (Enrollments))
-- Exemplos práticos de cada endpoint
-- Campos obrigatórios e opcionais
-- Tratamento de erros
-- Estratégias (completa, incremental, em lote)
-- Consultas de dados sincronizados
+Descreve o processo completo de sincronização:
+- Ordem de sincronização obrigatória: Units → Areas → Courses → Subjects → Professors/Students → Enrollments
+- Especificação de cada endpoint de sincronização
+- Definição de campos obrigatórios e opcionais por entidade
+- Tratamento de erros e códigos de resposta HTTP
+- Estratégias de sincronização (completa, incremental, em lote)
+- Operações de consulta de dados sincronizados
 
-**Siga este guia** durante a implementação.
+Referência: [Fluxo de Sincronização](fluxo-de-sincronizacao)
 
-### [5. Identificadores e Codes](identificadores-e-codes)
+### 5. Identificadores e Codes
 
-Como funcionam os identificadores:
-- O sistema utiliza seus próprios codes (não são gerados pela API)
-- Idempotência (mesmo code atualiza ao invés de duplicar)
-- Boas práticas de nomenclatura
-- Exemplos práticos
-- Erros comuns
+Explica o sistema de identificação de entidades:
+- Uso de identificadores próprios do sistema origem (codes)
+- Comportamento idempotente da API
+- Convenções de nomenclatura
+- Casos de uso e exemplos práticos
+- Erros comuns relacionados a identificadores
 
-**Essencial** para implementação correta.
+Referência: [Identificadores e Codes](identificadores-e-codes)
 
-## Como Utilizar esta Documentação
+### 6. Postman Collection
 
-### Para Implementação Inicial
+Exemplos práticos de requisições:
+- Configuração de variáveis de ambiente
+- Exemplos de sincronização para todas as entidades
+- Exemplos de consultas (GET)
+- Cenários de tratamento de erros
 
-1. Leia [Visão Geral](visao-geral) para entender o contexto completo
-2. Estude [Conceitos Fundamentais](conceitos-fundamentais) para familiarizar-se com as entidades
-3. Configure [Autenticação](autenticacao) no painel administrativo (requer permissões de administrador)
-4. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao) passo a passo
-5. Implemente [Identificadores e Codes](identificadores-e-codes) corretamente
+Referência: [Postman Collection](postman)
 
-### Para Consulta Rápida
+## Guia de Utilização
 
-- Use o índice de cada documento para navegar diretamente ao tópico
-- Consulte a coleção Postman para exemplos prontos
+### Implementação Inicial
 
-### Para Resolução de Problemas
+1. Revisar [Visão Geral](visao-geral) para compreensão do modelo de integração
+2. Estudar [Conceitos Fundamentais](conceitos-fundamentais) para familiarização com o modelo de dados
+3. Configurar [Autenticação](autenticacao) no painel administrativo (requer permissões de administrador)
+4. Implementar sincronização seguindo [Fluxo de Sincronização](fluxo-de-sincronizacao)
+5. Aplicar diretrizes de [Identificadores e Codes](identificadores-e-codes)
 
-Consulte as seções de "Erros Comuns" e "Tratamento de Erros" em cada documento.
+### Consulta de Referência
 
-## Conceitos-Chave
+Utilize o índice de navegação de cada documento para acesso direto a tópicos específicos.
 
-### Autenticação
-API Key gerada no painel administrativo (Avançado > Integrações). Detalhes em [Autenticação](autenticacao).
+### Resolução de Problemas
 
-### Identificadores (Codes)
-O sistema utiliza identificadores próprios do ERP. Detalhes em [Identificadores e Codes](identificadores-e-codes).
+Consulte as seções "Erros Comuns" e "Tratamento de Erros" disponíveis em cada documento técnico.
 
-### Ordem de Sincronização
-Unidades → Áreas → Cursos → Disciplinas Base → Professores/Alunos → Turmas
-
-Detalhes completos em [Fluxo de Sincronização](fluxo-de-sincronizacao).
-
-## Endpoints Principais
+## Especificação de Endpoints
 
 ### Base URL
 
@@ -123,80 +118,50 @@ Detalhes completos em [Fluxo de Sincronização](fluxo-de-sincronizacao).
 https://TENANT.proextend.com.br/api/integration/v1/
 ```
 
-### Status e Monitoramento
+Substituir `TENANT` pelo identificador da instância.
 
-```
-GET /health                    (público, sem autenticação)
-GET /sync-status               (requer API Key)
-```
+Para especificação completa de endpoints, consulte [Fluxo de Sincronização](fluxo-de-sincronizacao).
 
-### Sincronização (POST)
+## Procedimento de Início Rápido
 
-```
-POST /units/sync
-POST /areas/sync
-POST /courses/sync
-POST /subjects/sync
-POST /professors/sync
-POST /students/sync
-POST /enrollments/sync
-```
+1. Geração de API Key via painel administrativo: Avançado → Integrações → Gerar Nova API Key
+   - Referência: [Autenticação](autenticacao)
 
-### Consultas (GET)
+2. Sincronização de dados respeitando ordem de dependências
+   - Referência: [Fluxo de Sincronização](fluxo-de-sincronizacao)
 
-```
-GET /units
-GET /units/{code}
-GET /professors/{code}
-GET /professors/{code}/subjects
-GET /enrollments/{code}
-```
+3. Consulta de dados via endpoints GET utilizando API Key
+   - Referência: [Fluxo de Sincronização](fluxo-de-sincronizacao)
 
-## Início Rápido
+## Perguntas Frequentes
 
-1. **Gerar API Key**: Painel Admin → Avançado → Integrações → Gerar Nova API Key
-   - Ver guia completo em [Autenticação](autenticacao)
+### Armazenamento de IDs Retornados
 
-2. **Sincronizar dados**: Seguir ordem de dependências
-   - Ver passo a passo em [Fluxo de Sincronização](fluxo-de-sincronizacao)
+O sistema não requer armazenamento de IDs internos retornados pela API. A identificação de entidades é realizada através dos codes do sistema origem. Referência: [Identificadores e Codes](identificadores-e-codes).
 
-3. **Consultar dados**: Usar endpoints GET com API Key
-   - Ver exemplos em [Fluxo de Sincronização](fluxo-de-sincronizacao)
+### Mecanismo de Autenticação
 
-## FAQ
+A autenticação é realizada via API Key gerada no painel administrativo. A chave deve ser incluída no header HTTP `Authorization: Bearer {api_key}`. Referência: [Autenticação](autenticacao).
 
-### Preciso armazenar IDs retornados pela API?
+### Sincronização Múltipla
 
-**Não**. O sistema utiliza identificadores próprios (codes) do ERP. Ver [Identificadores e Codes](identificadores-e-codes).
+A API implementa comportamento idempotente. Múltiplas sincronizações com mesmo identificador (code) resultam em atualização da entidade existente, não em duplicação. Referência: [Identificadores e Codes](identificadores-e-codes).
 
-### Como funciona a autenticação?
+### Sequência de Sincronização
 
-API Key gerada no painel administrativo e usada no header `Authorization: Bearer {api_key}`. Ver [Autenticação](autenticacao).
+Ordem obrigatória: Unidades → Áreas → Cursos → Disciplinas Base → Professores/Alunos → Turmas. O não cumprimento desta ordem resultará em erros de dependência. Referência: [Fluxo de Sincronização](fluxo-de-sincronizacao).
 
-### Posso sincronizar múltiplas vezes?
+### Distinção entre Subject e Enrollment
 
-Sim! A sincronização é idempotente. Ver [Identificadores e Codes](identificadores-e-codes).
+- **Subject (Disciplina Base)**: Componente curricular cadastrado na grade do curso, sem vínculo semestral
+- **Enrollment (Turma)**: Instância de uma disciplina base em período letivo específico, com professor e alunos vinculados
 
-### Qual a ordem correta de sincronização?
+Referência: [Conceitos Fundamentais](conceitos-fundamentais).
 
-Unidades → Áreas → Cursos → Disciplinas Base → Professores/Alunos → Turmas. Ver [Fluxo de Sincronização](fluxo-de-sincronizacao).
+## Suporte Técnico
 
-### Qual a diferença entre Subject e Enrollment?
-
-- **Subject**: Disciplina no currículo (sem semestre)
-- **Enrollment**: Turma ativa (com semestre, professor e alunos)
-
-Ver [Conceitos Fundamentais](conceitos-fundamentais#diferença-disciplina-base-vs-turma).
-
-## Suporte
-
-Para dúvidas técnicas ou problemas na documentação, entre em contato com a equipe técnica da ProExtend.
+Questões técnicas e problemas relacionados à integração devem ser direcionados à equipe técnica da ProExtend.
 
 ## Versionamento
 
 - **Versão da API**: v1
-- **Última atualização da documentação**: Janeiro 2026
-
----
-
-Comece pela [Visão Geral](visao-geral) e configure a [Autenticação](autenticacao)!

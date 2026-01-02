@@ -696,7 +696,7 @@ Após setup inicial, sincronize apenas alterações.
 ## Próximos Passos
 
 1. Entenda [Identificadores e Codes](identificadores-e-codes)
-2. Consulte a [Coleção Postman](#) para testes
+2. Consulte a [Postman Collection](postman) para testes
 3. Configure sincronização periódica
 
 ## Suporte

@@ -67,10 +67,6 @@ const config = {
         },
         items: [],
       },
-      footer: {
-        style: 'dark',
-        copyright: `Copyright © ${new Date().getFullYear()} ProExtend. Todos os direitos reservados.`,
-      },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
