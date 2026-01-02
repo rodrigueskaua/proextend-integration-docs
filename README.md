@@ -5,7 +5,7 @@
 
 Documentação oficial para integração de sistemas acadêmicos (ERPs) com a plataforma ProExtend.
 
-## 📚 Sobre
+## Sobre
 
 Esta documentação foi desenvolvida para auxiliar equipes técnicas de instituições de ensino a integrar seus sistemas acadêmicos com a plataforma ProExtend.
 
