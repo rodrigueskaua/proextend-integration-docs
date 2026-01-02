@@ -1,6 +1,6 @@
 ---
-layout: default
-title: identificadores e codes
+sidebar_position: 6
+title: Identificadores e Codes
 ---
 
 # Identificadores e Codes
@@ -408,9 +408,9 @@ Antes de sincronizar, verifique:
 
 ## Próximos Passos
 
-1. Revise os [Conceitos Fundamentais](01-conceitos-fundamentais.md)
-2. Siga o [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md)
-3. Consulte a [Coleção Postman](../ProExtend-API.postman_collection.json) para exemplos
+1. Revise os [Conceitos Fundamentais](conceitos-fundamentais)
+2. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao)
+3. Consulte a [Coleção Postman](#) para exemplos
 
 ## Suporte
 

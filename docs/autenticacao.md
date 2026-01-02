@@ -1,6 +1,6 @@
 ---
-layout: default
-title: autenticacao
+sidebar_position: 4
+title: Autenticação
 ---
 
 # Autenticação
@@ -302,9 +302,9 @@ Antes de iniciar a integração:
 
 Após configurar a autenticação:
 
-1. Teste a conexão com [Health Check](03-fluxo-de-sincronizacao.md#verificando-disponibilidade)
-2. Siga o [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md) completo
-3. Entenda [Identificadores e Codes](04-identificadores-e-codes.md)
+1. Teste a conexão com [Health Check](fluxo-de-sincronizacao#verificando-disponibilidade)
+2. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao) completo
+3. Entenda [Identificadores e Codes](identificadores-e-codes)
 
 ## Suporte
 

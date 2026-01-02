@@ -1,6 +1,6 @@
 ---
-layout: default
-title: visao geral
+sidebar_position: 2
+title: Visão Geral
 ---
 
 # Visão Geral da Integração
@@ -33,7 +33,7 @@ A API utiliza **API Keys** geradas no painel administrativo (Avançado > Integra
 
 **Não há processo de login via API**. A API Key é incluída no header `Authorization: Bearer {token}` de todas as requisições.
 
-**Importante**: API Key é exibida apenas uma vez durante criação. Guia completo em [Autenticação](02-autenticacao.md).
+**Importante**: API Key é exibida apenas uma vez durante criação. Guia completo em [Autenticação](autenticacao).
 
 ## Identificadores (Codes)
 
@@ -43,7 +43,7 @@ O sistema utiliza **identificadores próprios** (codes) do ERP para todas as ent
 
 **Idempotência**: Sincronizar múltiplas vezes com mesmo code atualiza ao invés de duplicar.
 
-Detalhes completos em [Identificadores e Codes](04-identificadores-e-codes.md).
+Detalhes completos em [Identificadores e Codes](identificadores-e-codes).
 
 ## Entidades Principais
 
@@ -93,7 +93,7 @@ Disciplinas ativas vinculadas a um semestre específico, com professor e alunos 
 - **Disciplina Base (Subject)**: Cadastro permanente no currículo (sem semestre, sem alunos)
 - **Turma (Enrollment)**: Disciplina ativa em um semestre com professor e alunos matriculados
 
-Explicação detalhada em [Conceitos Fundamentais](01-conceitos-fundamentais.md#diferen%C3%A7a-disciplina-base-vs-turma).
+Explicação detalhada em [Conceitos Fundamentais](conceitos-fundamentais#diferen%C3%A7a-disciplina-base-vs-turma).
 
 ## Hierarquia de Entidades
 
@@ -101,7 +101,7 @@ Unidades → Áreas → Cursos → Disciplinas Base
 
 Turmas vinculam: Disciplina Base + Professor + Alunos
 
-Ver hierarquia completa em [Conceitos Fundamentais](01-conceitos-fundamentais.md#hierarquia-de-entidades).
+Ver hierarquia completa em [Conceitos Fundamentais](conceitos-fundamentais#hierarquia-de-entidades).
 
 ## Fluxo de Integração
 
@@ -112,7 +112,7 @@ Ver hierarquia completa em [Conceitos Fundamentais](01-conceitos-fundamentais.md
 ### Atualizações
 Enviar apenas dados alterados. API atualiza automaticamente com base no code.
 
-Detalhes completos em [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md).
+Detalhes completos em [Fluxo de Sincronização](fluxo-de-sincronizacao).
 
 ## Operações Disponíveis
 
@@ -235,7 +235,7 @@ GET /integration/v1/professors/PROF001
 Authorization: Bearer pex_...
 ```
 
-Exemplos completos em [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md).
+Exemplos completos em [Fluxo de Sincronização](fluxo-de-sincronizacao).
 
 ## Vantagens da Integração
 
@@ -249,10 +249,10 @@ Exemplos completos em [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md).
 
 Após compreender a visão geral da integração:
 
-1. Leia [Conceitos Fundamentais](01-conceitos-fundamentais.md) para entender as entidades em detalhes
-2. Configure [Autenticação](02-autenticacao.md) para começar a testar
-3. Siga o [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md) passo a passo
-4. Implemente corretamente conforme [Identificadores e Codes](04-identificadores-e-codes.md)
+1. Leia [Conceitos Fundamentais](conceitos-fundamentais) para entender as entidades em detalhes
+2. Configure [Autenticação](autenticacao) para começar a testar
+3. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao) passo a passo
+4. Implemente corretamente conforme [Identificadores e Codes](identificadores-e-codes)
 
 ## Suporte
 

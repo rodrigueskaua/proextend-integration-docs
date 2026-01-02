@@ -1,3 +1,8 @@
+---
+sidebar_position: 3
+title: Conceitos Fundamentais
+---
+
 # Conceitos Fundamentais
 
 ## Introdução
@@ -429,9 +434,9 @@ Utilize códigos do próprio sistema:
 
 ## Próximos Passos
 
-1. Configure [Autenticação](02-autenticacao.md)
-2. Siga o [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md)
-3. Entenda [Identificadores e Codes](04-identificadores-e-codes.md)
+1. Configure [Autenticação](autenticacao)
+2. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao)
+3. Entenda [Identificadores e Codes](identificadores-e-codes)
 
 ## Suporte
 

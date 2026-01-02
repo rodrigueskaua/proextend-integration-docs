@@ -1,3 +1,9 @@
+---
+sidebar_position: 1
+slug: /
+title: Introdução
+---
+
 # Documentação de Integração - ProExtend API
 
 Documentação oficial para integração de sistemas acadêmicos (ERPs) com a plataforma ProExtend.
@@ -19,7 +25,7 @@ O foco está em explicar **processos, conceitos e fluxos completos de sincroniza
 
 A documentação está organizada de forma progressiva, do conceitual ao prático:
 
-### [1. Visão Geral](00-visao-geral.md)
+### [1. Visão Geral](visao-geral)
 
 Comece aqui! Entenda:
 - Objetivo da integração
@@ -31,7 +37,7 @@ Comece aqui! Entenda:
 
 **Leia primeiro** se esta é a primeira vez com a API.
 
-### [2. Conceitos Fundamentais](01-conceitos-fundamentais.md)
+### [2. Conceitos Fundamentais](conceitos-fundamentais)
 
 Entenda as entidades e seus relacionamentos:
 - Unidades, Áreas, Cursos
@@ -42,7 +48,7 @@ Entenda as entidades e seus relacionamentos:
 
 **Importante** para entender o modelo de dados completo.
 
-### [3. Autenticação](02-autenticacao.md)
+### [3. Autenticação](autenticacao)
 
 Configure acesso à API:
 - Como gerar API Key no painel administrativo
@@ -54,7 +60,7 @@ Configure acesso à API:
 
 **Configure antes** de começar a sincronizar.
 
-### [4. Fluxo de Sincronização](03-fluxo-de-sincronizacao.md)
+### [4. Fluxo de Sincronização](fluxo-de-sincronizacao)
 
 Passo a passo completo de sincronização:
 - Ordem correta (Unidades/Campus (Units) → Áreas (Areas) → Cursos (Courses) → Disciplinas Base (Subjects) → Professores (Professors) → Alunos (Students) → Disciplinas Ativas/Turmas (Enrollments))
@@ -66,7 +72,7 @@ Passo a passo completo de sincronização:
 
 **Siga este guia** durante a implementação.
 
-### [5. Identificadores e Codes](04-identificadores-e-codes.md)
+### [5. Identificadores e Codes](identificadores-e-codes)
 
 Como funcionam os identificadores:
 - O sistema utiliza seus próprios codes (não são gerados pela API)
@@ -81,16 +87,16 @@ Como funcionam os identificadores:
 
 ### Para Implementação Inicial
 
-1. Leia [Visão Geral](00-visao-geral.md) para entender o contexto completo
-2. Estude [Conceitos Fundamentais](01-conceitos-fundamentais.md) para familiarizar-se com as entidades
-3. Configure [Autenticação](02-autenticacao.md) no painel administrativo (requer permissões de administrador)
-4. Siga o [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md) passo a passo
-5. Implemente [Identificadores e Codes](04-identificadores-e-codes.md) corretamente
+1. Leia [Visão Geral](visao-geral) para entender o contexto completo
+2. Estude [Conceitos Fundamentais](conceitos-fundamentais) para familiarizar-se com as entidades
+3. Configure [Autenticação](autenticacao) no painel administrativo (requer permissões de administrador)
+4. Siga o [Fluxo de Sincronização](fluxo-de-sincronizacao) passo a passo
+5. Implemente [Identificadores e Codes](identificadores-e-codes) corretamente
 
 ### Para Consulta Rápida
 
 - Use o índice de cada documento para navegar diretamente ao tópico
-- Consulte a [Coleção Postman](../ProExtend-API.postman_collection.json) para exemplos prontos
+- Consulte a coleção Postman para exemplos prontos
 
 ### Para Resolução de Problemas
 
@@ -99,15 +105,15 @@ Consulte as seções de "Erros Comuns" e "Tratamento de Erros" em cada documento
 ## Conceitos-Chave
 
 ### Autenticação
-API Key gerada no painel administrativo (Avançado > Integrações). Detalhes em [Autenticação](02-autenticacao.md).
+API Key gerada no painel administrativo (Avançado > Integrações). Detalhes em [Autenticação](autenticacao).
 
 ### Identificadores (Codes)
-O sistema utiliza identificadores próprios do ERP. Detalhes em [Identificadores e Codes](04-identificadores-e-codes.md).
+O sistema utiliza identificadores próprios do ERP. Detalhes em [Identificadores e Codes](identificadores-e-codes).
 
 ### Ordem de Sincronização
 Unidades → Áreas → Cursos → Disciplinas Base → Professores/Alunos → Turmas
 
-Detalhes completos em [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md).
+Detalhes completos em [Fluxo de Sincronização](fluxo-de-sincronizacao).
 
 ## Endpoints Principais
 
@@ -146,70 +152,41 @@ GET /professors/{code}/subjects
 GET /enrollments/{code}
 ```
 
-## Recursos Adicionais
-
-### Coleção Postman
-
-Arquivo: [`ProExtend-API.postman_collection.json`](../ProExtend-API.postman_collection.json)
-
-Contém exemplos prontos de todas as requisições com:
-- Variáveis configuráveis
-- Exemplos de sucesso e erro
-- Testes automatizados
-- Descrições detalhadas
-
-### Health Check
-
-Verifique se a API está operacional:
-
-```bash
-curl https://tenant.proextend.com.br/api/integration/v1/health
-```
-
-### Sync Status
-
-Acompanhe totais sincronizados:
-
-```bash
-curl https://tenant.proextend.com.br/api/integration/v1/sync-status \
-  -H "Authorization: Bearer pex_..."
-```
-
 ## Início Rápido
 
 1. **Gerar API Key**: Painel Admin → Avançado → Integrações → Gerar Nova API Key
-   - Ver guia completo em [Autenticação](02-autenticacao.md)
+   - Ver guia completo em [Autenticação](autenticacao)
 
 2. **Sincronizar dados**: Seguir ordem de dependências
-   - Ver passo a passo em [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md)
+   - Ver passo a passo em [Fluxo de Sincronização](fluxo-de-sincronizacao)
 
 3. **Consultar dados**: Usar endpoints GET com API Key
-   - Ver exemplos em [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md)
+   - Ver exemplos em [Fluxo de Sincronização](fluxo-de-sincronizacao)
 
 ## FAQ
 
 ### Preciso armazenar IDs retornados pela API?
 
-**Não**. O sistema utiliza identificadores próprios (codes) do ERP. Ver [Identificadores e Codes](04-identificadores-e-codes.md).
+**Não**. O sistema utiliza identificadores próprios (codes) do ERP. Ver [Identificadores e Codes](identificadores-e-codes).
 
 ### Como funciona a autenticação?
 
-API Key gerada no painel administrativo e usada no header `Authorization: Bearer {api_key}`. Ver [Autenticação](02-autenticacao.md).
+API Key gerada no painel administrativo e usada no header `Authorization: Bearer {api_key}`. Ver [Autenticação](autenticacao).
 
 ### Posso sincronizar múltiplas vezes?
 
-Sim! A sincronização é idempotente. Ver [Identificadores e Codes](04-identificadores-e-codes.md#idempot%C3%AAncia).
+Sim! A sincronização é idempotente. Ver [Identificadores e Codes](identificadores-e-codes).
 
 ### Qual a ordem correta de sincronização?
 
-Unidades → Áreas → Cursos → Disciplinas Base → Professores/Alunos → Turmas. Ver [Fluxo de Sincronização](03-fluxo-de-sincronizacao.md).
+Unidades → Áreas → Cursos → Disciplinas Base → Professores/Alunos → Turmas. Ver [Fluxo de Sincronização](fluxo-de-sincronizacao).
 
 ### Qual a diferença entre Subject e Enrollment?
 
 - **Subject**: Disciplina no currículo (sem semestre)
 - **Enrollment**: Turma ativa (com semestre, professor e alunos)
 
-Ver [Conceitos Fundamentais](01-conceitos-fundamentais.md#diferen%C3%A7a-disciplina-base-vs-turma).
+Ver [Conceitos Fundamentais](conceitos-fundamentais#diferença-disciplina-base-vs-turma).
 
 ## Suporte
 
@@ -218,8 +195,8 @@ Para dúvidas técnicas ou problemas na documentação, entre em contato com a e
 ## Versionamento
 
 - **Versão da API**: v1
-- **Última atualização da documentação**: Dezembro 2025
+- **Última atualização da documentação**: Janeiro 2026
 
 ---
 
-Leia a [Visão Geral](00-visao-geral.md) e configure a [Autenticação](02-autenticacao.md)!
+Comece pela [Visão Geral](visao-geral) e configure a [Autenticação](autenticacao)!

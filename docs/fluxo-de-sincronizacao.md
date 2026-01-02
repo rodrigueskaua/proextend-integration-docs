@@ -1,6 +1,6 @@
 ---
-layout: default
-title: fluxo de sincronizacao
+sidebar_position: 5
+title: Fluxo de Sincronização
 ---
 
 # Fluxo de Sincronização
@@ -695,8 +695,8 @@ Após setup inicial, sincronize apenas alterações.
 
 ## Próximos Passos
 
-1. Entenda [Identificadores e Codes](04-identificadores-e-codes.md)
-2. Consulte a [Coleção Postman](../ProExtend-API.postman_collection.json) para testes
+1. Entenda [Identificadores e Codes](identificadores-e-codes)
+2. Consulte a [Coleção Postman](#) para testes
 3. Configure sincronização periódica
 
 ## Suporte
